@@ -1,0 +1,85 @@
+CREATE DATABASE ESCOLA_MARCIA_THAYNA;
+ 
+USE ESCOLA_MARCIA_THAYNA;
+ 
+-- Criação da tabela de Professores
+CREATE TABLE Professor (
+    id_professor INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    senha VARCHAR(255) NOT NULL
+);
+ 
+-- Criação da tabela de Turmas
+CREATE TABLE Turma (
+    id_turma INT AUTO_INCREMENT PRIMARY KEY,
+    numero VARCHAR(50) NOT NULL,
+    nome VARCHAR(255) NOT NULL,
+    id_professor INT,
+    FOREIGN KEY (id_professor) REFERENCES Professor(id_professor)
+);
+ 
+-- Criação da tabela de Atividades
+CREATE TABLE atividade (
+    id_atividade INT AUTO_INCREMENT PRIMARY KEY,
+    numero VARCHAR(50) NOT NULL,
+    descricao TEXT NOT NULL,
+    id_turma INT,
+    FOREIGN KEY (id_turma) REFERENCES turma(id_turma)
+);
+ 
+-- Inserção de dados na tabela Professor
+SELECT  FROM professor; 
+INSERT INTO professor(nome, email, senha)
+VALUES 
+	('Marcia Scanacapra', 'marcia.scanacapra@senaisp.org.br', '232685')
+ 
+-- Inserção de dados na tabela Turma
+SELECT  FROM turma; 
+INSERT INTO turma(numero, nome, id_professor)
+VALUES 
+	('2DS-TB', 'Desenvolvimento de Sistemas', 1)
+-- Inserção de dados na tabela Atividade
+SELECT  FROM atividade; 
+INSERT INTO atividade(numero, descricao, id_turma)
+VALUES 
+	('001', 'Desenvolvimento de formularios em html e css', 1)
+-- 1 Inserção de novo professor
+SELECT  FROM professor; 
+INSERT INTO professor(nome, email, senha)
+VALUES 
+	('Michel Modesto', 'michel.modesto@senaisp.org.br', '789456')
+ 
+-- 2 Leitura de informações de turmas específicas
+SELECT  FROM turma WHERE id_turma=1;    
+ 
+-- 3 Atualizar a descrição de uma atividade
+SELECT  FROM atividade;   
+UPDATE atividade SET descricao = Realizar programa em python de Web Scraping where id_atividade = 1;
+ 
+  -- 4 Deletar um professor que n está vinculado com turma
+  SELECT  FROM professor; 
+  DELETE FROM professor WHERE id_professor=2;
+  -- 5 Associar uma atividade a uma turma 
+  INSERT INTO atividade (numero, descricao, id_turma)
+  VALUES
+	('002', 'Desenvolver página html css', 1);
+ 
+    -- 6 Listar todas as atividades de uma turma 
+    SELECT  FROM atividade WHERE id_turma = 1; 
+    -- 7 Altere o professor responsável por uma turma 
+    SELECT  FROM turma;
+    INSERT INTO professor(nome, email, senha)
+	VALUES
+	('Michel Modesto', 'michel.modesto@senaisp.org.br', '789456');
+    UPDATE turma SET id_professor = 3 WHERE id_professor=1;
+ 
+    -- 8 Consulta 
+SELECT turma.nome,  turma.numero, professor.nome, professor.email
+FROM professor
+INNER JOIN turma ON professor.id_professor = turma.id_professor
+-- 9 Listar nome do professor e a descrição da atividade
+SELECT professor.nome,  atividade.descricao
+FROM turma
+INNER JOIN professor ON professor.id_professor = turma.id_professor
+INNER JOIN atividade ON atividade.id_turma = turma.id_turma
