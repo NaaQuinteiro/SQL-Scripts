@@ -1,0 +1,196 @@
+CREATE DATABASE escola_thayna;
+USE escola_thayna;
+
+-- Criação da tabela de Professores
+CREATE TABLE Professor (
+    id_professor INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    senha VARCHAR(255) NOT NULL
+);
+
+-- Criação da tabela de Turmas
+CREATE TABLE Turma (
+    id_turma INT AUTO_INCREMENT PRIMARY KEY,
+    numero VARCHAR(50) NOT NULL,
+    nome VARCHAR(255) NOT NULL,
+    id_professor INT,
+    FOREIGN KEY (id_professor) REFERENCES Professor(id_professor)
+);
+
+-- Criação da tabela de Atividades
+CREATE TABLE atividade (
+    id_atividade INT AUTO_INCREMENT PRIMARY KEY,
+    numero VARCHAR(50) NOT NULL,
+    descricao TEXT NOT NULL,
+    id_turma INT,
+    FOREIGN KEY (id_turma) REFERENCES turma(id_turma)
+);
+
+ 
+ -- Atividade 2 
+SELECT * FROM professor; 
+INSERT INTO professor(nome, email, senha)
+VALUES 
+	('João Silva', 'joao@example.com', '123456');
+
+ -- Atividade 3
+INSERT INTO professor(nome, email, senha)
+VALUES 
+	('Márcia Scanacapra', 'marcia@example.com', '654321');
+
+INSERT INTO professor(nome, email, senha)
+VALUES 
+	('Michel Modesto', 'modesto@example.com', '246810');
+
+SELECT * FROM professor; 
+
+SELECT * FROM turma; 
+INSERT INTO turma(numero, nome, id_professor)
+VALUES 
+	('T01', 'Matemática Avançada', 3);
+    
+-- Atividade 4
+
+SELECT * FROM turma; 
+INSERT INTO turma(numero, nome, id_professor)
+VALUES 
+	('T02', 'Matemática', 2);
+    
+SELECT * FROM atividade; 
+INSERT INTO atividade (numero, descricao, id_turma)
+VALUES 
+	('A001', 'Prova de Matemática', 2);
+
+ -- Atividade 5
+INSERT INTO professor(nome, email, senha)
+VALUES 
+	('Ana Oliveira', 'ana@example.com', 'senha123');
+
+SELECT * FROM professor; 
+
+ -- Atividade 6 
+INSERT INTO turma(numero, nome, id_professor)
+VALUES 
+	('T02', 'Física Experimental', 4);
+
+UPDATE turma SET numero = "T04", nome = "Geografia", id_professor = 1 where id_turma = 4;
+-- Atividade 1 
+CREATE DATABASE escola_thayna;
+USE escola_thayna;
+
+-- Criação da tabela de Professores
+CREATE TABLE Professor (
+    id_professor INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    senha VARCHAR(255) NOT NULL
+);
+
+-- Criação da tabela de Turmas
+CREATE TABLE Turma (
+    id_turma INT AUTO_INCREMENT PRIMARY KEY,
+    numero VARCHAR(50) NOT NULL,
+    nome VARCHAR(255) NOT NULL,
+    id_professor INT,
+    FOREIGN KEY (id_professor) REFERENCES Professor(id_professor)
+);
+
+-- Criação da tabela de Atividades
+CREATE TABLE atividade (
+    id_atividade INT AUTO_INCREMENT PRIMARY KEY,
+    numero VARCHAR(50) NOT NULL,
+    descricao TEXT NOT NULL,
+    id_turma INT,
+    FOREIGN KEY (id_turma) REFERENCES turma(id_turma)
+);
+
+-- Atividade 2 
+SELECT * FROM professor; 
+INSERT INTO professor(nome, email, senha)
+VALUES 
+	('João Silva', 'joao@example.com', '123456');
+
+
+-- Atividade 3 
+INSERT INTO professor(nome, email, senha)
+VALUES 
+	('Márcia Scanacapra', 'marcia@example.com', '654321');
+
+INSERT INTO professor(nome, email, senha)
+VALUES 
+	('Michel Modesto', 'modesto@example.com', '246810');
+
+SELECT * FROM professor; 
+
+INSERT INTO turma(numero, nome, id_professor)
+VALUES 
+	('T01', 'Matemática Avançada', 3);
+SELECT * FROM turma; 
+
+-- Atividade 4
+INSERT INTO turma(numero, nome, id_professor)
+VALUES 
+	('T02', 'Matemática básica', 2);
+SELECT * FROM turma; 
+    
+INSERT INTO atividade (numero, descricao, id_turma)
+VALUES 
+	('A001', 'Prova de Matemática', 2);
+SELECT * FROM atividade; 
+
+-- Atividade 5
+INSERT INTO professor(nome, email, senha)
+VALUES 
+	('Ana Oliveira', 'ana@example.com', 'senha123');
+SELECT * FROM professor; 
+
+-- Atividade 6
+INSERT INTO turma(numero, nome, id_professor)
+VALUES 
+	('T02', 'Física Experimental', 4);
+SELECT * FROM turma; 
+
+-- Atividade 7
+SELECT * FROM professor WHERE id_professor = 1;
+
+-- Atividade 8 
+ SELECT turma.*,  professor.nome
+ FROM professor
+ INNER JOIN turma ON turma.id_professor = professor.id_professor
+
+-- Atividade 9
+SELECT atividade.*, turma.nome
+FROM turma
+INNER JOIN atividade ON atividade.id_turma = turma.id_turma
+
+-- Atividade 10
+UPDATE professor SET email = "carlos@example.com" WHERE id_professor = 2;
+SELECT * FROM professor;
+
+-- Atividade 11
+UPDATE turma SET nome = "Inglês Intermediário" WHERE id_turma = 3;
+SELECT * FROM turma;
+
+-- Atividade 12
+UPDATE atividade SET descricao = "Trabalho de Laboratório" WHERE id_atividade = 1;
+SELECT * FROM atividade;
+
+-- Atividade 13
+UPDATE professor SET senha = "232685" WHERE id_professor = 1;
+SELECT * FROM professor;
+
+-- Atividade 14
+UPDATE turma SET nome = "Química Orgânica" WHERE id_turma = 3;
+SELECT * FROM turma;
+
+-- Atividade 15
+DELETE FROM turma WHERE id_professor = 4;
+SELECT * FROM turma;
+DELETE FROM professor WHERE id_professor = 4;
+SELECT * FROM professor;
+
+-- Atividade 16
+DELETE FROM turma WHERE id_turma = 1;
+SELECT * FROM turma; 
+*/
