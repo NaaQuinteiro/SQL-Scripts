@@ -7,12 +7,14 @@ CREATE TABLE livros(
     isbn INT, 
     descricao TEXT
 );
+
 CREATE TABLE autor(
 	id_autor INT PRIMARY KEY AUTO_INCREMENT,
     nome_autor VARCHAR(255) NOT NULL, 
     data_nascimento DATE, 
     biografia TEXT
 );
+
 CREATE TABLE livro_autor(
     id_livro INT, 
     id_autor INT, 
@@ -96,7 +98,7 @@ SELECT  FROM categoria
 -- Inserindo dados na tabela categoria
 INSERT INTO categoria(nome_categoria) 
 VALUES 
-	('Epopeia'),
+    ('Epopeia'),
     ('Romance'),
     ('Ação'),
     ('Fantasia'),
@@ -110,7 +112,7 @@ SELECT  FROM usuarios;
 -- Inserindo dados na tabela usuarios
 INSERT INTO usuarios(nome_usuario, email_usuario, data_registro, nivel_associacao) 
 VALUES 
-	('Thayná Quinteiro', 'thaynaquinteiro@email.com', '2024-02-21', 'Premium'),	
+    ('Thayná Quinteiro', 'thaynaquinteiro@email.com', '2024-02-21', 'Premium'),	
     ('Ricardo Bianco', 'ricabianco@email.com', '2024-02-22', 'Regular'),
     ('Marlene Alves', 'marlenealves@email.com', '2024-02-23', 'Regular'),
     ('Marcelo Quinteiro', 'maquinteiro@email.com', '2024-02-24', 'Premium'),
@@ -120,13 +122,14 @@ VALUES
     ('Maria Ferreira', 'mariaferreira@email.com', '2024-02-27', 'Premium'),
     ('Ana Sutéro', 'anasutero@email.com', '2024-02-28', 'Premium'),
     ('Rafaela Sthal', 'rafasthal@email.com', '2024-02-29', 'Regular');
+
 -- SELECIONANDO DADOS NAS TABELAS
 SELECT  FROM emprestimo;
  
 -- Inserindo dados na tabela emprestimo
 INSERT INTO emprestimo(data_inicial, data_retorno, id_usuario, id_livro) 
 VALUES 
-	('2024-02-21', '2024-02-23, ', 1, 10),	
+    ('2024-02-21', '2024-02-23, ', 1, 10),	
     ('2024-02-23', '2024-02-25', 2, 9),
     ('2024-02-24', '2024-02-28', 4, 2),
     ('2024-02-24', '2024-02-28', 4, 3),
@@ -143,7 +146,7 @@ SELECT  FROM livro_autor;
 -- Inserindo dados na tabela emprestimo
 INSERT INTO livro_autor(id_livro, id_autor) 
 VALUES 
-	(1, 1),
+    (1, 1),
     (2, 1),
     (3, 2),
     (4, 2),
@@ -154,13 +157,14 @@ VALUES
     (9, 4),
     (10, 5),
     (11, 5);
-    -- SELECIONANDO DADOS NAS TABELAS
+
+-- SELECIONANDO DADOS NAS TABELAS
 SELECT  FROM livros_categoria;
  
--- Inserindo dados na tabela emprestimo
+-- Inserindo dados na tabela 
 INSERT INTO livros_categoria(id_livro, id_categoria) 
 VALUES 
-	(1, 3),
+    (1, 3),
     (1, 4),
     (3, 1),
     (3, 3),
@@ -171,29 +175,35 @@ VALUES
     (9, 2),
     (10, 2),
     (11, 4);
-  -- Consulta SQL qu traz todos os dados relacionados aos ids
+
+-- Consulta SQL qu traz todos os dados relacionados aos ids
   SELECT 
   FROM livros
   INNER JOIN livro_autor ON livros.id_livro = livro_autor.id_livro
   INNER JOIN autor ON livro_autor.id_autor = autor.id_autor;
+
 -- Consulta SQL 
   SELECT livros.titulo, autor.nome_autor
   FROM livros
   INNER JOIN livro_autor ON livros.id_livro = livro_autor.id_livro
   INNER JOIN autor ON livro_autor.id_autor = autor.id_autor;
-SELECT  FROM emprestimo
+
+SELECT  *FROM emprestimo;
+
 -- Consulta SQL 
 SELECT livros.titulo, usuarios.nome_usuario, emprestimo.data_inicial, emprestimo.data_retorno
 FROM livros
 INNER JOIN emprestimo ON livros.id_livro = emprestimo.id_livro
 INNER JOIN usuarios ON emprestimo.id_usuario = usuarios.id_usuario
-  -- Consulta SQL com parametro, no caso é para trazer o que foi pedido desde que a data de retorno na tabela emprestimo seja maior que a data de hoje 
+
+-- Consulta SQL com parametro, no caso é para trazer o que foi pedido desde que a data de retorno na tabela emprestimo seja maior que a data de hoje 
 SELECT livros.titulo, usuarios.nome_usuario, emprestimo.data_inicial, emprestimo.data_retorno
 FROM livros
 INNER JOIN emprestimo ON livros.id_livro = emprestimo.id_livro
 INNER JOIN usuarios ON emprestimo.id_usuario = usuarios.id_usuario
 WHERE emprestimo.data_retorno  CURDATE() 
 -- curdate() é uma função que retorna a data de hoje
+
 -- Consulta e subconsulta com parametro 
 SELECT 
 FROM livros
