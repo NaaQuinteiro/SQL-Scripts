@@ -158,41 +158,5 @@ VALUES
     (9, 2),
     (10, 2);
  
--- Atividade 1 
-SELECT *FROM emprestimo;
- 
--- Atividade 2
-SELECT *FROM livros;
-SELECT *FROM livros WHERE isbn = 655587143;
-
--- Atividade 3
-SELECT *FROM autor;
-SELECT nome_autor, data_nascimento FROM autor WHERE YEAR(data_nascimento) > 1965; 
-
--- Atividade 4
-SELECT biografia FROM autor WHERE nome_autor = 'George Orwell';
-SELECT nome_autor, biografia FROM autor WHERE nome_autor = 'George Orwell';
-
--- Atividade 5
-SELECT nome_usuario, nivel_associacao FROM usuarios WHERE nivel_associacao = 'Premium';
-
--- Atividade 6
-SELECT titulo FROM livros WHERE id_livro = 6;
-SELECT id_livro, titulo FROM livros WHERE id_livro = 6;
-
--- Atividade 7
-SELECT *FROM autor WHERE nome_autor LIKE ('J%');
-SELECT nome_autor FROM autor WHERE nome_autor LIKE ('J%');
-
--- Atividade 8
-SELECT email_usuario FROM usuarios WHERE id_usuario = 5;
-
--- Atividade 9 
-SELECT *FROM livros WHERE titulo LIKE ('Harry%');
-SELECT titulo FROM livros WHERE titulo LIKE ('Harry%');
-
--- Atividade 10
-SELECT nome_usuario, data_registro FROM usuarios WHERE nome_usuario LIKE ('Maria%')
-
 */ 
 

@@ -1,0 +1,61 @@
+-- Atividade 1 
+SELECT *FROM emprestimo;
+ 
+-- Atividade 2
+SELECT *FROM livros;
+SELECT *FROM livros WHERE isbn = 655587143;
+
+-- Atividade 3
+SELECT *FROM autor;
+SELECT nome_autor, data_nascimento FROM autor WHERE YEAR(data_nascimento) > 1965; 
+
+-- Atividade 4
+SELECT biografia FROM autor WHERE nome_autor = 'George Orwell';
+SELECT nome_autor, biografia FROM autor WHERE nome_autor = 'George Orwell';
+
+-- Atividade 5
+SELECT nome_usuario, nivel_associacao FROM usuarios WHERE nivel_associacao = 'Premium';
+
+-- Atividade 6
+SELECT titulo FROM livros WHERE id_livro = 6;
+SELECT id_livro, titulo FROM livros WHERE id_livro = 6;
+
+-- Atividade 7
+SELECT *FROM autor WHERE nome_autor LIKE ('J%');
+SELECT nome_autor FROM autor WHERE nome_autor LIKE ('J%');
+
+-- Atividade 8
+SELECT email_usuario FROM usuarios WHERE id_usuario = 5;
+
+-- Atividade 9 
+SELECT *FROM livros WHERE titulo LIKE ('Harry%');
+SELECT titulo FROM livros WHERE titulo LIKE ('Harry%');
+
+-- Atividade 10
+SELECT nome_usuario, data_registro FROM usuarios WHERE nome_usuario LIKE ('Maria%');
+
+-- Atividade 11
+SELECT *FROM emprestimo WHERE data_retorno = null;
+  
+-- Atividade 12 
+SELECT *FROM usuarios;
+SELECT id_usuario, email_usuario FROM usuarios WHERE email_usuario = 'maquinteiro@email.com';
+SELECT id_usuario FROM usuarios WHERE email_usuario = 'maquinteiro@email.com'; 
+
+-- Atividade 13
+SELECT *FROM usuarios;
+SELECT *FROM usuarios WHERE data_registro > '2023-09-01'; 
+
+-- Atividade 14
+SELECT nome_autor, data_nascimento FROM autor WHERE YEAR(data_nascimento)  NOT BETWEEN 1900 and 1999;
+
+-- Atividade 15
+SELECT nome_usuario, data_registro FROM usuarios 
+WHERE YEAR(data_registro) = 2023 
+AND MONTH(data_registro) BETWEEN 10 AND 12; 
+
+-- Atividade 16
+SELECT *FROM usuarios WHERE email_usuario = null; 
+
+-- Atividade 17
+SELECT *FROM livros WHERE LENGTH(descricao) <= 50;

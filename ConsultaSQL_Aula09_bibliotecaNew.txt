@@ -1,0 +1,65 @@
+-- 1.Qual é o ID do autor do livro com o título 'Harry Potter e a Pedra Filosofali'?
+SELECT id_autor
+FROM livro_autor 
+WHERE id_livro IN (
+	SELECT id_livro 
+    FROM livros 
+    WHERE titulo = 'Harry Potter e a Pedra Filosofal' 
+    );
+
+-- 2.Quais são os livros escritos por 'Holly Black'?
+SELECT titulo 
+FROM livros 
+WHERE id_livro IN(
+	SELECT id_livro 
+    FROM livro_autor 
+    INNER JOIN autor ON autor.id_autor = livro_autor.id_autor
+    WHERE nome_autor = 'Holly Black'
+);
+
+-- 3.Contar quantos livros existem em cada categoria.
+SELECT nome_categoria, COUNT(id_livro)
+FROM categoria
+INNER JOIN livros_categoria ON livros_categoria.id_categoria = categoria.id_categoria
+GROUP BY nome_categoria;
+
+-- 4.Encontrar o autor com o maior número de livros publicados.
+SELECT autor.nome_autor AS autor, COUNT(livro_autor.id_livro) AS qtd_livros
+FROM autor
+JOIN livro_autor ON autor.id_autor = livro_autor.id_autor
+GROUP BY autor.nome_autor
+HAVING COUNT(livro_autor.id_livro) = (
+    SELECT MAX(Numero_Livros_Publicados)
+    FROM (
+        SELECT COUNT(livro_autor.id_livro) AS Numero_Livros_Publicados
+        FROM livro_autor 
+        GROUP BY livro_autor.id_autor
+    ) AS Subquery
+);
+
+SELECT autor.nome_autor, COUNT(livro_autor.id_livro) AS qtdlivros
+FROM autor
+INNER JOIN livro_autor ON livro_autor.id_autor = autor.id_autor
+INNER JOIN livros ON livro_autor.id_livro = livros.id_livro
+GROUP BY autor.nome_autor;
+
+-- 5. Calcular a média de livros emprestados por usuário.
+SELECT *FROM emprestimo;
+SELECT COUNT(*) / COUNT(DISTINCT id_usuario) AS media_livros_usuario
+FROM emprestimo;
+
+-- 6.Listar categorias que têm mais de 5 livros
+SELECT nome_categoria, COUNT(id_livro) AS categoria_mais_5Livros
+FROM categoria
+INNER JOIN livros_categoria ON livros_categoria.id_categoria = categoria.id_categoria
+GROUP BY nome_categoria
+HAVING COUNT(id_livro) > 5;
+
+-- 7.Encontrar o livro mais antigo.
+SELECT LIVROS.*
+FROM LIVROS
+INNER JOIN EMPRESTIMO ON EMPRESTIMO.ID_LIVRO = LIVROS.ID_LIVRO
+WHERE DATA_INICIAL = (
+	SELECT MIN(DATA_INICIAL) 
+    FROM EMPRESTIMO
+    );
