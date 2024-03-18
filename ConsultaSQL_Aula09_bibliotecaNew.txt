@@ -106,5 +106,30 @@ INNER JOIN emprestimo ON emprestimo.id_livro = livros.id_livro
 ORDER BY emprestimo.data_inicial DESC 
 LIMIT 3;
 
+-- 12. Mostrar o total de empréstimos feitos por usuários premium.
+SELECT COUNT(*) AS total_emprestimos_premium
+FROM emprestimo
+INNER JOIN usuarios ON usuarios.id_usuario = emprestimo.id_usuario
+WHERE usuarios.nivel_associacao = 'Premium';
+
+-- 13. Determinar o número de livros por autor.
+SELECT autor.nome_autor, COUNT(*) AS livros_por_autor
+FROM livros
+INNER JOIN livro_autor ON livro_autor.id_livro = livros.id_livro
+INNER JOIN autor ON livro_autor.id_autor = autor.id_autor
+GROUP BY autor.nome_autor;
+
+-- 14. Listar cada categoria e o número de livros emprestados para cada uma.
+SELECT categoria.nome_categoria, COUNT(*) AS livros_por_categoria
+FROM livros
+INNER JOIN livros_categoria ON livros_categoria.id_livro = livros.id_livro
+INNER JOIN categoria ON livros_categoria.id_categoria = categoria.id_categoria
+GROUP BY categoria.nome_categoria;
+
+
+
+
+
+
 
 
