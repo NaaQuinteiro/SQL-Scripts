@@ -133,6 +133,71 @@ GROUP BY emprestimo.id_usuario
 ORDER BY total_livros_unicos DESC 
 LIMIT 1;
 
+-- 16.	Obter a média de duração dos empréstimos.
+-- Nesta consulta, DATEDIFF(data_devolucao, data_emprestimo) calcula a diferença em dias 
+-- entre a data de devolução e a data de empréstimo para cada empréstimo. 
+-- A função AVG então calcula a média dessas diferenças para todos os empréstimos na tabela.
+SELECT AVG(DATEDIFF(data_retorno, data_inicial)) AS media_duracao_emprestimos_em_dias
+FROM emprestimo;
+
+-- 17.	Listar os livros que nunca foram emprestados.
+SELECT id_livro, titulo
+FROM livros
+WHERE id_livro NOT IN(
+	SELECT id_livro
+    FROM emprestimo
+);
+
+-- 18.	Determinar a categoria com o maior número de livros.
+SELECT categoria.nome_categoria, COUNT(*) AS categoria_com_mais_livros
+FROM livros
+INNER JOIN livros_categoria ON livros_categoria.id_livro = livros.id_livro
+INNER JOIN categoria ON livros_categoria.id_categoria = categoria.id_categoria
+GROUP BY categoria.nome_categoria
+ORDER BY categoria_com_mais_livros DESC
+LIMIT 1;
+
+-- 19.	Calcular a média de livros publicados por autor.
+SELECT AVG(numero_de_livros) AS media_livros_por_autor
+FROM (
+    SELECT autor.id_autor, COUNT(*) AS numero_de_livros
+    FROM livros
+    INNER JOIN livro_autor ON livro_autor.id_livro = livros.id_livro
+    INNER JOIN autor ON livro_autor.id_autor = autor.id_autor
+    GROUP BY autor.id_autor
+) AS subconsulta;
+
+SELECT subconsulta.nome_autor, AVG(numero_de_livros) AS media_livros_por_autor
+FROM (
+    SELECT autor.id_autor, autor.nome_autor, COUNT(*) AS numero_de_livros
+    FROM livros
+    INNER JOIN livro_autor ON livro_autor.id_livro = livros.id_livro
+    INNER JOIN autor ON livro_autor.id_autor = autor.id_autor
+    GROUP BY autor.id_autor, autor.nome_autor
+) AS subconsulta
+GROUP BY subconsulta.nome_autor;
+
+-- 20 Identificar os meses com mais de 10 empréstimos.
+SELECT MONTH(data_inicial) AS mes, COUNT(*) AS total_emprestimos
+FROM emprestimo
+GROUP BY mes
+HAVING total_emprestimos >10;
+
+-- 21.	Mostrar o autor mais jovem.
+SELECT autor.nome_autor, autor.data_nascimento
+FROM autor
+WHERE data_nascimento = (
+	SELECT MAX(data_nascimento) 
+    FROM autor
+    );
+
+-- 22.	Listar os usuários que realizaram empréstimo no seu mês de registro.
+SELECT usuarios.nome_usuario, MONTH(emprestimo.data_inicial) AS mes_registro
+FROM usuarios 
+INNER JOIN emprestimo ON emprestimo.id_usuario = emprestimo.id_usuario
+WHERE MONTH(usuarios.data_registro) = MONTH (emprestimo.data_inicial);
+
+
 
 
 
