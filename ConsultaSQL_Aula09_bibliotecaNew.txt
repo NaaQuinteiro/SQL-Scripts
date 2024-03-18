@@ -126,6 +126,14 @@ INNER JOIN livros_categoria ON livros_categoria.id_livro = livros.id_livro
 INNER JOIN categoria ON livros_categoria.id_categoria = categoria.id_categoria
 GROUP BY categoria.nome_categoria;
 
+-- 15. Encontrar o usuário que pegou emprestado o maior número de livros únicos.
+SELECT emprestimo.id_usuario, COUNT(DISTINCT emprestimo.id_livro) AS total_livros_unicos
+FROM emprestimo 
+GROUP BY emprestimo.id_usuario
+ORDER BY total_livros_unicos DESC 
+LIMIT 1;
+
+
 
 
 
