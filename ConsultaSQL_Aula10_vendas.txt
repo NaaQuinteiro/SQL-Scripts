@@ -1,0 +1,139 @@
+
+-- Criação do banco de dados
+CREATE DATABASE IF NOT EXISTS VENDAS_thayna;
+USE VENDAS_thayna;
+
+-- Criação da tabela Cliente
+CREATE TABLE Cliente (
+    id_cliente INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    email VARCHAR(255)
+);
+
+-- Criação da tabela Produto
+CREATE TABLE Produto (
+    id_produto INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    preco DECIMAL(10, 2) NOT NULL
+);
+
+-- Criação da tabela vendas_online
+CREATE TABLE vendas_online (
+    id_venda INT AUTO_INCREMENT PRIMARY KEY,
+    id_cliente INT,
+    id_produto INT,
+    data_venda DATE NOT NULL,
+    valor_venda DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (id_cliente) REFERENCES Cliente(id_cliente),
+    FOREIGN KEY (id_produto) REFERENCES Produto(id_produto)
+);
+
+-- Criação da tabela vendas_fisicas
+CREATE TABLE vendas_fisicas (
+    id_venda INT AUTO_INCREMENT PRIMARY KEY,
+    id_cliente INT,
+    id_produto INT,
+    data_venda DATE NOT NULL,
+    valor_venda DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (id_cliente) REFERENCES Cliente(id_cliente),
+    FOREIGN KEY (id_produto) REFERENCES Produto(id_produto)
+);
+
+-- Inserção de dados em Cliente
+INSERT INTO Cliente (nome, email) VALUES
+('João Silva', 'joao.silva@example.com'),
+('Maria Oliveira', 'maria.oliveira@example.com'),
+('Carlos Souza', 'carlos.souza@example.com'),
+('Olívia Reis', 'olivia.reis@example.com');
+
+
+-- Inserção de dados em Produto
+INSERT INTO Produto (nome, preco) VALUES
+('Livro de SQL', 50.00),
+('Curso de Dados', 150.00),
+('Notebook Gamer', 5000.00),
+('Notebook i7', 3500.00);
+
+ -- Inserção de dados em vendas_online
+INSERT INTO vendas_online (id_cliente, id_produto, data_venda, valor_venda) VALUES
+(1, 1, '2023-01-05', 50.00),
+(2, 2, '2023-01-15', 150.00),
+(3, 3, '2023-01-20', 5000.00),
+(1, 3, '2023-01-25', 5000.00);
+
+-- Inserção de dados em vendas_fisicas
+INSERT INTO vendas_fisicas (id_cliente, id_produto, data_venda, valor_venda) VALUES
+(2, 1, '2023-01-03', 50.00),
+(3, 2, '2023-01-12', 150.00),
+(1, 3, '2023-01-18', 5000.00),
+(1, 1, '2023-01-18', 60.00),
+(2, 3, '2023-01-25', 5000.00);
+
+-- 1 Liste todos os clientes e produtos comprados online. (INNER JOIN)
+SELECT cliente.nome AS nome_cliente, produto.nome AS nome_produto
+FROM cliente 
+INNER JOIN vendas_online ON vendas_online.id_cliente = cliente.id_cliente 
+INNER JOIN produto ON produto.id_produto = vendas_online.id_produto
+
+-- 2 Apresente as vendas físicas mostrando os nomes dos clientes e dos produtos. (INNER JOIN)
+SELECT cliente.nome AS nome_cliente, produto.nome AS nome_produto
+FROM cliente 
+INNER JOIN vendas_fisicas ON vendas_fisicas.id_cliente = cliente.id_cliente 
+INNER JOIN produto ON produto.id_produto = vendas_fisicas.id_produto
+
+-- 3 Identifique produtos vendidos tanto online quanto fisicamente no mesmo dia. (INNER JOIN)
+SELECT produto.nome AS produto_vendido_online_fisico, vendas_fisicas.data_venda, vendas_online.data_venda
+FROM produto 
+INNER JOIN vendas_online ON vendas_online.id_produto = produto.id_produto
+INNER JOIN vendas_fisicas ON vendas_fisicas.id_produto = produto.id_produto
+WHERE vendas_fisicas.data_venda = vendas_online.data_venda
+
+-- 4. Mostre clientes e produtos cujo cliente adquiriu por ambos os canais de venda. (INNER JOIN)
+SELECT cliente.nome, produto.nome AS produto_adquirido_ambos_canais_venda
+FROM cliente 
+INNER JOIN vendas_online ON vendas_online.id_cliente = cliente.id_cliente
+INNER JOIN vendas_fisicas ON vendas_fisicas.id_cliente = cliente.id_cliente
+INNER JOIN produto ON produto.id_produto = vendas_online.id_produto AND vendas_fisicas.id_produto = produto.id_produto
+
+-- 5. Calcule o total de vendas online por produto.
+SELECT produto.nome, SUM(valor_venda) AS total_vendas 
+FROM vendas_online
+INNER JOIN produto ON produto.id_produto = vendas_online.id_produto
+GROUP BY produto.nome
+
+-- 6. Liste todos os produtos, indicando o total vendido online, mesmo que não tenham 
+-- sido vendidos. Se não houver venda, mostrar 0. (LEFT JOIN ou RIGHT JOIN, IFNULL)
+SELECT produto.nome, IFNULL(SUM(vendas_online.valor_venda),0) AS total_vendido_online
+FROM produto 
+LEFT JOIN vendas_online ON produto.id_produto = vendas_online.id_produto 
+GROUP BY produto.nome
+
+-- 7. Identifique clientes que não realizaram nenhuma compra física. (LEFT JOIN ou RIGHT JOIN, IS NULL)
+SELECT cliente.nome, id_venda
+FROM cliente
+LEFT JOIN vendas_fisicas ON vendas_fisicas.id_cliente = cliente.id_cliente
+WHERE vendas_fisicas.id_cliente IS NULL
+
+-- 8 Localize produtos que nunca foram vendidos online. (LEFT JOIN ou RIGHT JOIN, IS NULL)
+SELECT produto.nome, id_venda 
+FROM produto 
+LEFT JOIN vendas_online ON vendas_online.id_produto = produto.id_produto
+WHERE vendas_online.id_produto IS NULL
+
+-- 9 Apresente vendas físicas que não têm equivalente em vendas online. (LEFT JOIN ou RIGHT JOIN, IS NULL)
+SELECT vendas_fisicas.* 
+FROM vendas_online
+LEFT JOIN vendas_fisicas ON vendas_fisicas.id_produto = vendas_online.id_produto
+WHERE vendas_online.id_produto IS NULL
+
+-- 10 Mostre clientes que não fizeram compras online. (LEFT JOIN ou RIGHT JOIN, IS NULL)
+SELECT cliente.nome, vendas_online.id_venda 
+FROM cliente
+LEFT JOIN vendas_online ON vendas_online.id_cliente = cliente.id_cliente 
+WHERE vendas_online.id_venda IS NULL
+
+-- 11 Combine todas as vendas (online e físicas) em uma única lista. (não utilizar inner join, utilizar o UNION)
+SELECT * FROM vendas_fisicas
+UNION 
+SELECT * FROM vendas_online
+*/
