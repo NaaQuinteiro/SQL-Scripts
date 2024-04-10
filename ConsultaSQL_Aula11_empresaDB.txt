@@ -1,0 +1,108 @@
+-- 1.Mostre o nome do funcionário e simule um aumento de salário de R$500,00 para cada um. Apresente o nome, salário atual, e salário com aumento.
+SELECT funcionarios.nome, funcionarios.salario, funcionarios.salario + 500 AS 'aumento_salario' 
+FROM funcionarios; 
+
+
+-- 2.Calcule a diferença entre o salário atual dos funcionários e a média salarial da empresa. Mostre o nome do funcionário e a diferença.
+SELECT funcionarios.nome, funcionarios.salario - (SELECT AVG(salario) FROM funcionarios) AS 'diferencaSalarial'
+FROM Funcionarios;
+
+SELECT funcionarios.nome, (SELECT AVG(salario) FROM funcionarios) - funcionarios.salario  AS 'diferencaSalarial'
+FROM Funcionarios;
+
+
+-- 3. Para um bônus de final de ano, cada funcionário receberá o equivalente a 10% do seu salário atual. Mostre o nome do funcionário e o valor do bônus.
+SELECT funcionarios.nome, funcionarios.salario * 0.10 AS 'Bônus' FROM funcionarios;
+
+
+-- 4.Suponha que o salário dos funcionários seja pago em 12 parcelas. Mostre o nome do funcionário e o valor de cada parcela.
+SELECT funcionarios.nome, funcionarios.salario/12 AS 'Valor_parcelas_12meses' FROM Funcionarios;
+
+
+-- 5.Identifique quais funcionários possuem um salário que, ao dividir por 500, deixa um resto de 100. Mostre o nome do funcionário e o salário.
+SELECT nome, salario AS 'Salario %¨500 = 100'
+FROM Funcionarios 
+WHERE salario % 500 = 100;
+
+-- 6.	Encontre os funcionários que estão no Departamento 1. Mostre o nome do funcionário e o departamento.
+SELECT funcionarios.nome, departamentos.nome
+FROM Funcionarios
+INNER JOIN departamentos ON departamentos.departamentoid = funcionarios.departamentoid
+WHERE funcionarios.departamentoid = 1;
+
+-- 7.Selecione os funcionários que têm salário maior que R$5000,00. Mostre o nome e o salário.
+SELECT nome, salario AS 'Salario > 5000'
+FROM Funcionarios 
+WHERE salario > 5000;
+
+-- 8.Encontre os funcionários que começaram a trabalhar antes de 2023. Mostre o nome e a data de entrada.
+SELECT nome, datadeentrada AS 'Data de entrada antes de 2023'
+FROM Funcionarios 
+WHERE YEAR(datadeentrada) < 2023;
+
+-- 9.Mostre os funcionários que têm um salário de pelo menos R$4500,00. Apresente o nome e o salário.
+SELECT nome, salario 
+FROM Funcionarios 
+WHERE salario >= 4500;
+
+-- 10.Liste os funcionários que têm um salário até R$4000,00. Mostre o nome e o salário.
+SELECT nome, salario 
+FROM Funcionarios
+WHERE salario 
+BETWEEN 0 AND 4000;
+
+
+-- 11.	Encontre os funcionários que não estão no Departamento 3. Mostre o nome e o departamento.
+SELECT funcionarios.nome, departamentos.nome
+FROM funcionarios 
+INNER JOIN departamentos ON departamentos.departamentoID = funcionarios.departamentoid
+WHERE NOT funcionarios.departamentoid = 3;
+
+ -- 12.	Selecione os funcionários que têm salário maior que R$4000,00 e estão ativos. Mostre o nome e o salário.
+ SELECT nome, salario 
+ FROM Funcionarios 
+ WHERE salario > 4000 AND ativo = TRUE;
+
+ -- 13.	Liste os funcionários que estão no Departamento 1 ou têm salário maior que R$6000,00. Mostre o nome, departamento e salário.
+ SELECT funcionarios.nome, departamentos.nome AS 'nome_departamento', funcionarios.salario
+ FROM funcionarios 
+ INNER JOIN departamentos ON departamentos.departamentoid = funcionarios.departamentoid
+ WHERE funcionarios.departamentoid = 1 OR funcionarios.salario > 6000;
+
+-- 14.	Encontre os funcionários que não estão ativos. Mostre o nome e o status de atividade.
+SELECT funcionarios.nome, funcionarios.ativo AS 'Status de atividade'
+FROM funcionarios 
+WHERE funcionarios.ativo = FALSE;
+
+-- 15.Identifique os funcionários cujo salário está entre R$4500,00 e R$5500,00. Mostre o nome e o salário.
+SELECT funcionarios.nome, funcionarios.salario
+FROM Funcionarios 
+WHERE funcionarios.salario
+BETWEEN 4500 AND 5500;
+
+-- 16.	Selecione os funcionários que estão nos Departamentos 1, 2 ou 3. Mostre o nome e o departamento.
+ SELECT funcionarios.nome, departamentos.nome AS 'nome_departamento'
+ FROM funcionarios 
+ INNER JOIN departamentos ON departamentos.departamentoid = funcionarios.departamentoid
+ WHERE funcionarios.departamentoid 
+ BETWEEN 1 AND 3;
+
+-- 17.	Encontre os funcionários cujo nome começa com 'A'. Mostre o nome.
+SELECT nome FROM funcionarios WHERE nome LIKE 'A%';
+
+-- 18.	Liste os funcionários que não têm um departamento associado. Mostre o nome.
+SELECT funcionarios.nome
+FROM funcionarios
+WHERE funcionarios.departamentoid IS NULL;
+
+-- 19.	Liste todos os funcionários que estão associados a um departamento, incluindo o nome do funcionário, seu salário, e o nome do departamento ao qual pertencem. Ordene os resultados pelo nome do departamento.
+SELECT funcionarios.nome, funcionarios.salario, departamentos.nome
+FROM Funcionarios
+INNER JOIN departamentos ON departamentos.departamentoid = funcionarios.departamentoid
+WHERE funcionarios.departamentoid IS NOT NULL
+ORDER BY departamentos.nome ASC;
+
+-- 20. Exiba a lista completa de todos os funcionários, incluindo aqueles que não estão associados a nenhum departamento. Mostre o nome do funcionário, seu salário, e o nome do departamento (caso esteja associado a algum). 
+SELECT funcionarios.nome, funcionarios.salario, IFNULL(departamentos.nome, 'Sem Departamento') AS 'nomeDepartamento'
+FROM Funcionarios
+LEFT JOIN departamentos ON departamentos.departamentoid = funcionarios.departamentoid
