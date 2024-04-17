@@ -1,0 +1,80 @@
+
+ -- Atividades Lista 12
+ 
+ -- 1.Exiba a data e hora atuais.
+ SELECT NOW() AS  'Data_Hora_Atual';
+
+-- 2.Mostre a data atual.
+SELECT CURDATE() AS 'Data_Atual';
+
+-- 3.Encontre os funcionários que começaram no dia 15 do mês.
+-- Mostre o nome e a data de entrada.
+SELECT funcionarios.nome, funcionarios.DataDeEntrada
+FROM funcionarios
+WHERE DAY(dataDeEntrada) = '15';
+
+-- 4.Calcule quantos dias cada funcionário trabalhou desde a sua data de entrada até hoje. 
+-- Mostre o nome e o número de dias.
+SELECT funcionarios.nome, DATEDIFF(CURDATE(), funcionarios.dataDeEntrada) AS 'Número de Dias trabalhados'
+FROM Funcionarios;
+
+-- 5.Mostre o nome do funcionário e o valor absoluto da diferença entre seu salário e 
+-- média salarial.
+SELECT funcionarios.nome, ABS(funcionarios.salario - (SELECT AVG(salario) FROM funcionarios)) AS 'Valor absoluto da Diferença Salarial'
+FROM funcionarios;
+
+-- 6.Arredonde o salário dos funcionários para o inteiro mais próximo. 
+-- Mostre o nome e o salário arredondado.
+SELECT nome, ROUND(salario) AS 'Salario ~ inteiro mais proximo' 
+FROM Funcionarios;
+
+-- 7.	Mostre o nome do funcionário e o menor salário inteiro 
+-- que é maior ou igual ao salário atual.
+SELECT nome, CEILING(salario) AS 'Menor Salario Inteiro'
+FROM Funcionarios 
+
+   
+-- 8.Mostre o nome do funcionário e o maior salário inteiro que
+-- é menor ou igual ao salário atual.
+SELECT nome, FLOOR(salario) AS 'Maior Salario Inteiro'
+FROM Funcionarios;
+
+-- 9.Mostre o nome do funcionário e o comprimento do seu nome.
+SELECT nome, CHAR_LENGTH(nome) AS 'Comprimento do Nome'
+FROM Funcionarios;
+
+-- 10.Converta o nome dos funcionários para maiúsculas. Mostre o nome em maiúsculas.
+SELECT NOME,  UPPER(NOME) AS 'NOME EM MAIUSCULAS'
+FROM Funcionarios; 
+
+-- 11.	Converta o nome dos funcionários para minúsculas. Mostre o nome em minúsculas.
+SELECT NOME, LOWER(NOME) AS 'NOME EM MINÚSCULAS'
+FROM Funcionarios; 
+
+-- 12.Mostre o nome completo do funcionário, concatenando o nome e o sobrenome.
+SELECT CONCAT(NOME ,' ', SOBRENOME) AS 'NOME COMPLETO'
+FROM Funcionarios;
+
+-- 13.Conte o total de funcionários ativos.
+SELECT COUNT(funcionarios.ATIVO) AS 'FUNCIONÁRIOS ATIVOS'
+FROM Funcionarios 
+WHERE ativo = TRUE
+GROUP BY 'FUNCIONÁRIOS ATIVOS';
+
+-- 14.	Calcule a soma total dos salários dos funcionários ativos.
+SELECT SUM(SALARIO) AS 'TOTAL DOS SALARIOS DOS FUNCIONARIOS ATIVOS'
+FROM Funcionarios 
+WHERE ativo = TRUE;
+
+-- 15.	Calcule o salário médio dos funcionários no Departamento 1.
+SELECT AVG(SALARIO) AS 'Salario medio dos funcionarios do departamento 1'
+FROM FUNCIONARIOS 
+WHERE DEPARTAMENTOID = 1;
+
+-- 16.	Encontre o maior salário entre os funcionários.
+SELECT MAX(SALARIO) AS 'MAIOR SALARIO ENTRE OS FUNCIONARIOS'
+FROM FUNCIONARIOS;
+
+-- 17.	Encontre o menor salário entre os funcionários.
+SELECT MIN(SALARIO) AS 'MENOR SALARIO ENTRE OS FUNCIONARIOS'
+FROM FUNCIONARIOS;
