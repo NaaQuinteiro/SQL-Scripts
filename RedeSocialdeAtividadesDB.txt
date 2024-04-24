@@ -1,0 +1,78 @@
+-- Criando banco de dados de Redes Sociais de Atividades 
+CREATE DATABASE IF NOT EXISTS RedeSocial_Atividades_thayna;
+
+-- Usar a database 
+USE RedeSocial_Atividades_thayna;
+
+-- Cria a tabela de Endereço
+CREATE TABLE IF NOT EXISTS Endereco(
+	id_endereco INT AUTO_INCREMENT PRIMARY KEY,
+    rua VARCHAR(255) NOT NULL,
+    bairro VARCHAR(255) NOT NULL,
+	cidade VARCHAR(255) NOT NULL,
+    estado VARCHAR(255) NOT NULL,
+    cep  VARCHAR(9) NOT NULL,
+    numero INT NOT NULL,
+    complemento VARCHAR(255)
+);
+
+-- Cria tabela de Usuário
+CREATE TABLE IF NOT EXISTS Usuario(
+	id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    sobrenome VARCHAR(255) NOT NULL,
+    idade INT NOT NULL, 
+    email VARCHAR(255) NOT NULL,
+    nome_usuario  VARCHAR(255) UNIQUE NOT NULL,
+    senha VARCHAR(255) UNIQUE NOT NULL,
+    nivel_permissao ENUM ('aluno', 'administrador') NOT NULL, 
+    id_endereco INT NOT NULL, 
+    FOREIGN KEY (id_endereco) REFERENCES Endereco(id_endereco)
+);
+
+-- Cria tabela de Categoria
+CREATE TABLE IF NOT EXISTS Categoria(
+	id_categoria INT AUTO_INCREMENT PRIMARY KEY,
+    categoria VARCHAR(255) UNIQUE NOT NULL
+);
+
+-- Cria tabela de atividade 
+CREATE TABLE IF NOT EXISTS Atividade(
+	id_atividade INT AUTO_INCREMENT PRIMARY KEY, 
+    descricao VARCHAR(255) NOT NULL, 
+    data_inical DATE NOT NULL, 
+    data_final DATE NOT NULL,
+    id_endereco INT NOT NULL, 
+    id_categoria INT NOT NULL, 
+    FOREIGN KEY (id_endereco) REFERENCES Endereco(id_endereco),
+    FOREIGN KEY (id_categoria) REFERENCES Categoria(id_categoria)
+);
+
+-- Cria tabela de Participaçao 
+CREATE TABLE IF NOT EXISTS Participacao_Atividade(
+	id_participacao INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT NOT NULL, 
+    id_atividade INT NOT NULL, 
+    FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario),
+    FOREIGN KEY (id_atividade) REFERENCES Atividade(id_atividade)
+);
+
+-- Cria tabela Comentário 
+CREATE TABLE IF NOT EXISTS Comentario_Atividade(
+	id_comentario INT AUTO_INCREMENT PRIMARY KEY,
+    comentario TEXT NOT NULL, 
+    data_comentario DATE NOT NULL, 
+    id_usuario INT NOT NULL, 
+    id_atividade INT NOT NULL,
+    FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario),
+    FOREIGN KEY (id_atividade) REFERENCES Atividade(id_atividade)
+);
+
+-- Cria a tabela Conexao
+CREATE TABLE IF NOT EXISTS Conexao(
+	id_conexao INT AUTO_INCREMENT PRIMARY KEY, 
+    id_usuario INT NOT NULL,
+    id_amigo_usuario INT NOT NULL, 
+    FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario),
+    FOREIGN KEY (id_amigo_usuario) REFERENCES Usuario(id_usuario)
+);
