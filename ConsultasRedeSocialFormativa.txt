@@ -1,0 +1,96 @@
+
+-- 1.Gerar um script que mostre as atividades e os comentário. Mostrar título da atividade e descrição.
+SELECT atividade.titulo, atividade.descricao, comentario_atividade.comentario
+FROM atividade
+INNER JOIN comentario_atividade ON comentario_atividade.id_atividade = atividade.id_atividade;
+
+
+-- 2.Gerar um script que liste os usuários que já participam de alguma atividade. 
+-- Mostrar nome do usuário e e-mail.
+SELECT DISTINCT usuario.nome_usuario, usuario.email
+FROM usuario 
+INNER JOIN participacao_atividade ON participacao_atividade.id_usuario = usuario.id_usuario
+INNER JOIN atividade ON atividade.id_atividade = participacao_atividade.id_atividade;
+-- o select distict compara as linhas retornadas, se for igual ele não repete
+
+SELECT * FROM USUARIO;
+
+-- 3.Gerar script que liste todas as atividades que ocorrerão no próximo mês. 
+-- Mostrar o título da atividade, descrição e data.
+SELECT atividade.titulo, atividade.descricao, atividade.data_inical
+FROM ATIVIDADE 
+WHERE MONTH(data_inical) = MONTH(DATE_ADD(CURRENT_DATE(), INTERVAL 1 MONTH))
+AND YEAR (data_inical) = YEAR(DATE_ADD(CURRENT_DATE, INTERVAL 1 MONTH))
+
+-- 4.	Gerar um script para listar os usuários que não estão inscritos em nenhuma atividade.
+-- Mostre nome do usuário, e-mail e id da atividade.
+SELECT usuario.nome_usuario, usuario.email, participacao_atividade.id_atividade
+FROM usuario 
+LEFT JOIN participacao_atividade  ON  usuario.id_usuario = participacao_atividade.id_usuario
+WHERE participacao_atividade.id_atividade IS NULL;
+
+-- 5.Gerar um script para contar quantos usuários estão registrados em cada cidade.
+-- Mostrar cidade e a quantidade de usuários por cidade.
+SELECT usuario.cidade, COUNT(usuario.cidade) AS 'quantidade_usuarios'
+FROM usuario 
+GROUP BY usuario.cidade;
+
+-- 6. Criar um script para mostrar o número de atividades por categoria.
+-- Mostrar o nome da categoria e a quantidade de atividades pra cada categoria.
+SELECT categoria.categoria, COUNT(atividade.id_categoria) AS 'N° Atividades'
+FROM categoria
+INNER JOIN atividade ON atividade.id_categoria = categoria.id_categoria
+GROUP BY atividade.id_categoria;
+
+-- 7.Gerar um script que liste as 3 atividades mais populares com base no número de participações. 
+-- Mostre o título da atividade e a quantidade de participantes por atividade.
+SELECT atividade.titulo, COUNT(participacao_atividade.id_atividade) AS Participantes
+FROM atividade 
+INNER JOIN participacao_atividade ON participacao_atividade.id_atividade = atividade.id_atividade 
+GROUP BY (participacao_atividade.id_atividade)
+ORDER BY Participantes DESC
+LIMIT 3;
+
+-- 8.	Gerar um script que liste usuários que participaram de pelo menos 2 atividades. 
+-- Mostre o nome do usuário e a quantidade de atividades em que participou.
+SELECT DISTINCT usuario.nome_usuario, COUNT(participacao_atividade.id_usuario) AS AtividadeParticipada
+FROM usuario 
+INNER JOIN participacao_atividade ON participacao_atividade.id_usuario = participacao_atividade.id_usuario 
+GROUP BY usuario.nome_usuario
+HAVING AtividadeParticipada >= 2;
+
+-- 9.Criar um script para mostrar os detalhes das últimas cinco atividades.
+-- Mostrar o nome do usuário, o título da atividade e a data dela. 
+-- Ordene por nome de usuário ascendente e data descendente.
+SELECT usuario.nome_usuario, atividade.titulo, atividade.data_inical
+FROM usuario 
+INNER JOIN participacao_atividade ON participacao_atividade.id_usuario = usuario.id_usuario
+INNER JOIN atividade ON atividade.id_atividade = participacao_atividade.id_atividade
+GROUP BY usuario.nome_usuario ASC, atividade.data_inical DESC
+LIMIT 5;
+
+-- 10. Criar um script para mostrar a categoria com o menor número de atividades associadas. 
+-- Mostrar o nome da categoria e o total de atividades associadas a ela.
+SELECT categoria.categoria, COUNT(atividade.id_categoria) AS Total_de_Atividade
+FROM categoria 
+LEFT JOIN atividade ON atividade.id_categoria = categoria.id_categoria
+group by categoria.categoria 
+ORDER BY Total_de_Atividade ASC 
+LIMIT 1;
+
+
+-- 11.Gerar um script que liste todas as atividades e seus comentários.
+-- Mostrar nome da atividade, nome do usuário e o comentário. Ordene por título de atividade. 
+SELECT atividade.titulo, usuario.nome, comentario_atividade.comentario
+FROM atividade
+INNER JOIN comentario_atividade ON comentario_atividade.id_atividade = atividade.id_atividade 
+INNER JOIN usuario ON usuario.id_usuario = comentario_atividade.id_usuario
+ORDER BY atividade.titulo;
+
+
+-- 12. Gerar um script que liste todas as atividades que foram criadas por administradores. 
+-- Mostrar o título da atividade, sua descrição e o usuário que a criou.
+SELECT atividade.titulo, atividade.descricao, usuario.nome_usuario, usuario.nivel_permissao
+FROM atividade 
+INNER JOIN usuario ON usuario.id_usuario = atividade.id_criador
+WHERE usuario.nivel_permissao = 'administrador';

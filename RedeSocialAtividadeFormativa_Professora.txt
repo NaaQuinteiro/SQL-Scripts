@@ -1,0 +1,131 @@
+-- Criar a base de dados
+CREATE DATABASE RedeSocialAtividades;
+
+-- Selecionar a base de dados
+USE RedeSocialAtividades;
+
+-- Criar a tabela de usuários
+CREATE TABLE Usuarios (
+  UsuarioID INT AUTO_INCREMENT PRIMARY KEY,
+  Nome VARCHAR(100),
+  Idade INT,
+  Cidade VARCHAR(100),
+  Email VARCHAR(100) UNIQUE,
+  NomeUsuario VARCHAR(50) UNIQUE,
+  Senha VARCHAR(100),
+  TipoUsuario ENUM('Estudante', 'Administrador') -- Tipo de usuário para permissões
+);
+
+-- Criar a tabela de categorias
+CREATE TABLE Categorias (
+  CategoriaID INT AUTO_INCREMENT PRIMARY KEY,
+  Nome VARCHAR(50) UNIQUE
+);
+
+-- Criar a tabela de atividades
+CREATE TABLE Atividades (
+  AtividadeID INT AUTO_INCREMENT PRIMARY KEY,
+  Titulo VARCHAR(100),
+  Descricao TEXT,
+  Data DATE,
+  Local VARCHAR(100),
+  CategoriaID INT, -- Chave estrangeira para a tabela de categorias
+  FOREIGN KEY (CategoriaID) REFERENCES Categorias(CategoriaID),
+  CriadorID INT, -- Chave estrangeira para o criador da atividade
+  FOREIGN KEY (CriadorID) REFERENCES Usuarios(UsuarioID)
+);
+
+-- Criar a tabela de participações em atividades
+CREATE TABLE Participacoes (
+  ParticipacaoID INT AUTO_INCREMENT PRIMARY KEY,
+  AtividadeID INT, -- Chave estrangeira para a tabela de atividades
+  UsuarioID INT, -- Chave estrangeira para a tabela de usuários
+  FOREIGN KEY (AtividadeID) REFERENCES Atividades(AtividadeID),
+  FOREIGN KEY (UsuarioID) REFERENCES Usuarios(UsuarioID)
+);
+
+-- Criar a tabela de conexões entre usuários
+CREATE TABLE Conexoes (
+  ConexaoID INT AUTO_INCREMENT PRIMARY KEY,
+  UsuarioID1 INT, -- Chave estrangeira para um usuário
+  UsuarioID2 INT, -- Chave estrangeira para outro usuário
+  FOREIGN KEY (UsuarioID1) REFERENCES Usuarios(UsuarioID),
+  FOREIGN KEY (UsuarioID2) REFERENCES Usuarios(UsuarioID),
+  UNIQUE(UsuarioID1, UsuarioID2) -- Garante que não haverá duplicatas
+);
+
+-- Criar a tabela de comentários nas atividades
+CREATE TABLE Comentarios (
+  ComentarioID INT AUTO_INCREMENT PRIMARY KEY,
+  AtividadeID INT, -- Chave estrangeira para a tabela de atividades
+  UsuarioID INT, -- Chave estrangeira para a tabela de usuários
+  Comentario TEXT,
+  DataComentario TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (AtividadeID) REFERENCES Atividades(AtividadeID),
+  FOREIGN KEY (UsuarioID) REFERENCES Usuarios(UsuarioID)
+);
+
+
+INSERÇÃO DE DADOS NAS TABELAS
+-- Inserir dados na tabela de usuários
+INSERT INTO Usuarios (Nome, Idade, Cidade, Email, NomeUsuario, Senha, TipoUsuario) VALUES
+('João', 20, 'São Paulo', 'joao@example.com', 'joao123', 'senha123', 'Estudante'),
+('Maria', 22, 'Rio de Janeiro', 'maria@example.com', 'maria456', 'senha456', 'Administrador'),
+('Pedro', 19, 'Belo Horizonte', 'pedro@example.com', 'pedro789', 'senha789', 'Estudante'),
+('Ana', 21, 'São Paulo', 'ana@example.com', 'ana101', 'senha101', 'Estudante'),
+('Carlos', 18, 'Brasília', 'carlos@example.com', 'carlos2022', 'senha2022', 'Estudante'),
+('Lucas', 25, 'Porto Alegre', 'lucas@example.com', 'lucas123', 'senha123', 'Estudante'),
+('Juliana', 23, 'Curitiba', 'juliana@example.com', 'juliana456', 'senha456', 'Administrador'),
+('Mateus', 24, 'São Paulo', 'mateus@example.com', 'mateus789', 'senha789', 'Estudante'),
+('Isabela', 26, 'Fortaleza', 'isabela@example.com', 'isabela101', 'senha101', 'Estudante'),
+('Gabriel', 22, 'Manaus', 'gabriel@example.com', 'gabriel2022', 'senha2022', 'Estudante');
+
+-- Inserir dados na tabela de categorias
+INSERT INTO Categorias (Nome) VALUES
+('Esportes'),
+('Artes'),
+('Tecnologia'),
+('Culinária'),
+('Música');
+
+-- Inserir dados na tabela de atividades
+INSERT INTO Atividades (Titulo, Descricao, Data, Local, CategoriaID, CriadorID) VALUES
+('Partida de Futebol', 'Venha jogar futebol conosco!', '2023-05-10', 'Campo do Bairro', 1, 1),
+('Oficina de Pintura', 'Aprenda técnicas de pintura em tela.', '2023-03-15', 'Ateliê das Artes', 2, 2),
+('Workshop de Programação', 'Introdução à programação em Python.', '2023-12-20', 'Laboratório de Informática', 3, 3),
+('Aula de Culinária', 'Aprenda a fazer pratos deliciosos.', '2024-05-25', 'Cozinha Gourmet', 4, 4),
+('Concerto de Piano', 'Apresentação de obras clássicas.', '2024-06-01', 'Teatro Municipal', 5, 5),
+('Exposição de Fotografia', 'Venha apreciar belas imagens capturadas.', '2024-06-05', 'Galeria de Arte', 2, 2),
+('Curso de Desenvolvimento Web', 'Aprenda a criar sites profissionais.', '2024-06-10', 'Sala de Aula 3', 3, 3),
+('Sessão de Cinema ao Ar Livre', 'Desfrute de filmes sob o céu estrelado.', '2024-06-15', 'Praça Central', 4, 4);
+
+-- Inserir dados na tabela de participações em atividades
+INSERT INTO Participacoes (AtividadeID, UsuarioID) VALUES
+(1, 2),
+(1, 3),
+(3, 1),
+(4, 5),
+(5, 4),
+(5, 1),
+(1, 6);
+
+-- Inserir dados na tabela de conexões entre usuários
+INSERT INTO Conexoes (UsuarioID1, UsuarioID2) VALUES
+(1, 2),
+(2, 3),
+(3, 4),
+(4, 5),
+(5, 1);
+
+-- Inserir dados na tabela de comentários nas atividades
+INSERT INTO Comentarios (AtividadeID, UsuarioID, Comentario) VALUES
+(1, 2, 'Estarei lá!'),
+(1, 3, 'Mal posso esperar para jogar!'),
+(3, 1, 'Excelente workshop!'),
+(5, 4, 'Que emocionante!'),
+(5, 1, 'Adorei o concerto!');
+
+-- Adicionar atividades sem comentários
+INSERT INTO Comentarios (AtividadeID, UsuarioID, Comentario) VALUES
+(2, 2, NULL),
+(4, 3, NULL);
