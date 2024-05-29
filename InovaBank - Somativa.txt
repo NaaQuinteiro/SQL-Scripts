@@ -1,0 +1,97 @@
+-- Criando banco de dados de Redes Sociais de Atividades 
+CREATE DATABASE IF NOT EXISTS InovaBank_thayna;
+
+-- Usar a database 
+USE InovaBank_thayna;
+
+-- Criando a Tabela de clientes
+CREATE TABLE IF NOT EXISTS cliente (
+	id_cliente INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL, 
+    sobrenome VARCHAR(200) NOT NULL,
+    cpf CHAR(11) UNIQUE NOT NULL, 
+    email VARCHAR(255), -- aqui deve ser not null?
+    telefone VARCHAR(20), 
+    data_registro DATE NOT NULL
+);
+
+-- Criando a Tabela de endereço
+CREATE TABLE IF NOT EXISTS endereco(
+	id_endereco INT AUTO_INCREMENT PRIMARY KEY,
+    rua VARCHAR(255) NOT NULL,
+    bairro VARCHAR(255) NOT NULL,
+	cidade VARCHAR(255) NOT NULL,
+    estado VARCHAR(255) NOT NULL,
+    cep  VARCHAR(9) NOT NULL,
+    numero INT NOT NULL,
+    complemento VARCHAR(255),
+    id_cliente INT NOT NULL,
+    FOREIGN KEY(id_cliente) REFERENCES cliente(id_cliente)
+);
+
+-- Criando a Tabela de conta
+CREATE TABLE IF NOT EXISTS conta(
+	id_conta INT AUTO_INCREMENT PRIMARY KEY,
+    id_cliente INT NOT NULL, 
+    tipo_conta ENUM('corrente', 'poupança') NOT NULL, 
+    status_ativo BOOLEAN NOT NULL,
+    FOREIGN KEY(id_cliente) REFERENCES cliente(id_cliente)
+);
+
+-- Criando a Tabela de cartoes
+CREATE TABLE IF NOT EXISTS cartao(
+	id_cartao INT AUTO_INCREMENT PRIMARY KEY,
+    id_conta INT NOT NULL, 
+    nome VARCHAR(50) NOT NULL,
+    tipo_cartao ENUM('debito', 'credito', 'debito_credito') NOT NULL, 
+    numero_cartao VARCHAR(16) NOT NULL,
+    cod_seguranca VARCHAR(3) NOT NULL, 
+    limite_credito DECIMAL(10,2),
+    data_emissao DATE NOT NULL, 
+    data_validade DATE NOT NULL, 
+    status ENUM('bloqueado','desbloqueado') NOT NULL,
+    FOREIGN KEY(id_conta) REFERENCES conta(id_conta)
+);
+
+-- Criando a Tabela de transações
+CREATE TABLE IF NOT EXISTS transacoes(
+	id_transacao INT AUTO_INCREMENT PRIMARY KEY,
+    id_conta INT NOT NULL, 
+    tipo_transacao ENUM('depósito', 'saque', 'transferência', 'pagamento') NOT NULL, 
+    data_transacao DATE NOT NULL, 
+    hora TIME NOT NULL, 
+    FOREIGN KEY(id_conta) REFERENCES conta(id_conta)
+);
+
+-- Criando a Tabela de produtos
+CREATE TABLE IF NOT EXISTS produto(
+	id_produto INT AUTO_INCREMENT PRIMARY KEY,
+    nome_produto VARCHAR(150) NOT NULL, 
+    risco ENUM('baixo', 'médio', 'alto') NOT NULL, 
+    tipo_produto ENUM('ação','tesouro direto') NOT NULL, 
+    retorno DECIMAL(5,2) NOT NULL
+);
+
+-- Criando a Tabela de investimentos
+CREATE TABLE IF NOT EXISTS investimento(
+	id_investimento INT AUTO_INCREMENT PRIMARY KEY,
+    id_produto INT NOT NULL, 
+    id_conta INT NOT NULL,
+    tipo_operacao ENUM('compra','venda') NOT NULL, 
+    quantidade INT NOT NULL,
+    data_hora DATETIME NOT NULL,
+    FOREIGN KEY(id_produto) REFERENCES produto(id_produto),
+    FOREIGN KEY(id_conta) REFERENCES conta(id_conta)
+);
+
+-- Criando a Tabela de log de acesso
+CREATE TABLE IF NOT EXISTS log_acesso(
+	id_acesso INT AUTO_INCREMENT PRIMARY KEY,
+    id_conta INT NOT NULL,
+	data_acesso DATE NOT NULL, 
+    hora_acesso TIME NOT NULL, 
+    FOREIGN KEY(id_conta) REFERENCES conta(id_conta)
+);
+
+
+

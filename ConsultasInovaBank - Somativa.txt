@@ -1,0 +1,160 @@
+-- Consultas 
+
+-- 1.Listar todos os clientes com seus respectivos dados. 
+-- Campos: ClienteID, Nome, CPF, Endereco, Email, Telefone.
+
+SELECT nome, cpf, telefone, endereco.*
+FROM cliente 
+INNER JOIN endereco ON endereco.id_cliente = cliente.id_cliente;
+
+SELECT Cliente.id_cliente, cliente.nome, cliente.cpf, cliente.email, cliente.telefone,
+CONCAT(Endereco.rua, ', ', 
+	Endereco.numero, ', ', 
+    Endereco.bairro, ', ', 
+    Endereco.cidade, ', ', 
+    Endereco.estado, ', ', 
+    Endereco.cep, ', ', 
+    Endereco.complemento) AS Endereco
+FROM Cliente
+INNER JOIN Endereco ON endereco.id_cliente = cliente.id_cliente;
+
+-- 2. Encontrar os detalhes do cartão com o maior limite de crédito.
+-- Campos: CartaoID, NumeroCartao, LimiteCredito.
+SELECT cartao.id_cartao, cartao.numero_cartao, cartao.limite_credito 
+FROM cartao
+WHERE limite_credito  = (SELECT MAX(limite_credito) FROM cartao);
+
+-- 3. Obter detalhes de todos os cartões bloqueados(coloquei desbloqueado pq n tinha nenhum bloqueado).
+-- Campos: CartaoID, NumeroCartao, Status.
+SELECT  cartao.id_cartao, cartao.numero_cartao, cartao.status 
+FROM cartao
+WHERE status = 'desbloqueado';
+
+-- 4. Encontrar todos os clientes que têm uma conta corrente ativa.
+-- Campos: ClienteID, Nome.
+SELECT cliente.id_cliente, cliente.nome
+FROM Cliente
+INNER JOIN conta ON conta.id_cliente = cliente.id_cliente 
+WHERE conta.status_ativo = true;
+
+
+-- 5. Encontrar o número total de contas por tipo (Corrente ou Poupança).
+-- Campos: TipoConta, Contagem de Contas
+SELECT conta.tipo_conta, COUNT(id_conta) AS ContagemDeContas
+FROM conta
+GROUP BY tipo_conta;
+
+-- 6.Listar todas as transações realizadas em um determinado mês e ano (ex: Maio de 2023).
+-- Campos: TransacaoID, TipoTransacao, Valor, DataHora.
+ALTER TABLE transacoes
+ADD COLUMN valor DECIMAL(5, 2) NOT NULL;
+
+UPDATE transacoes 
+SET valor = 100.00
+WHERE id_transacao = 1;
+
+UPDATE transacoes 
+SET valor = 200.00 
+WHERE id_transacao = 2;
+
+UPDATE transacoes 
+SET valor = 300.00 
+WHERE id_transacao = 3;
+
+SELECT transacoes.id_transacao, transacoes.tipo_transacao, transacoes.valor, transacoes.data_transacao, transacoes.hora
+FROM transacoes
+WHERE MONTH(transacoes.data_transacao) = 05 AND YEAR(transacoes.data_transacao) = 2024;
+
+-- 7. Mostrar detalhes de todos os investimentos com risco alto.
+-- Campos: InvestimentoID, Nome, Risco, RetornoEsperado.
+SELECT investimento.id_investimento, produto.nome_produto, produto.risco, produto.retorno
+FROM produto 
+INNER JOIN investimento ON investimento.id_produto = produto.id_produto 
+WHERE produto.risco = 'alto';
+
+-- 8.Encontrar todos os clientes que têm cartões de crédito ativos.
+-- Campos: ClienteID, Nome.
+SELECT cliente.id_cliente, cliente.nome 
+FROM Cliente 
+INNER JOIN conta ON conta.id_cliente = cliente.id_cliente
+INNER JOIN cartao ON cartao.id_conta = conta.id_conta
+WHERE cartao.tipo_cartao = 'credito' OR cartao.tipo_cartao = 'debito_credito' AND cartao.status = 'desbloqueado';
+
+-- 9. Mostrar a quantidade de cartões emitidos por cada conta.
+-- Campos: ContaID, Número de Cartões.
+SELECT conta.id_conta, count(id_cartao) AS 'Números de Cartões'
+FROM conta 
+INNER JOIN cartao ON cartao.id_conta = conta.id_conta 
+GROUP BY conta.id_conta;
+
+-- 10.	Calcular a soma total de todas as transações de pagamento.
+-- Campos: Soma Total de Pagamentos.
+SELECT SUM(transacoes.valor) AS 'Soma total de Pagamentos'
+FROM transacoes
+WHERE tipo_transacao = 'pagamento';
+-- não retornará nada pois ninguem fez pagamento
+
+-- 11.	Gerar um relatório de investimentos, listando clientes que realizaram operações 
+-- de compra ou venda de investimentos, com detalhes das operações e dos produtos de investimento. 
+SELECT cliente.nome, cliente.cpf, produto.nome_produto, investimento.tipo_operacao, investimento.quantidade, investimento.data_hora
+FROM Cliente 
+INNER JOIN conta ON conta.id_cliente = cliente.id_cliente
+INNER JOIN investimento ON investimento.id_conta = conta.id_conta 
+INNER JOIN produto ON produto.id_produto = investimento.id_produto; 
+
+-- 12.Gerar um relatório detalhado das transações financeiras (depósitos, saques, transferências e 
+-- pagamentos) para um cliente específico. O relatório deve listar cada transação, incluindo o tipo, 
+-- o valor, a descrição (aqui, repetindo o tipo) e a data. 
+SELECT transacoes.tipo_transacao, transacoes.valor, transacoes.tipo_transacao AS DescriçãoTransação, transacoes.data_transacao
+FROM cliente
+INNER JOIN conta ON conta.id_cliente = cliente.id_cliente
+INNER JOIN transacoes ON transacoes.id_conta = conta.id_conta
+WHERE cliente.id_cliente = 1;
+
+-- 13. Listar todas as operações de investimento (compras e vendas) realizadas por um cliente 
+-- específico. Este relatório deve incluir o nome do investimento, o tipo de operação, 
+-- a descrição (aqui, adicionando o nome do investimento) e a data da operação.
+SELECT investimento.tipo_operacao AS 'Nome de Investimento', investimento.tipo_operacao, investimento.tipo_operacao AS 'Descrição', investimento.data_hora AS 'Data Operação'
+FROM cliente 
+INNER JOIN conta ON conta.id_cliente = cliente.id_cliente
+INNER JOIN investimento ON investimento.id_conta = conta.id_conta
+WHERE cliente.id_cliente = 3;
+
+-- 14. Gerar um relatório unificado para um cliente específico, mostrando todas as transações 
+-- bancárias e operações de investimento. Este relatório deve listar tanto as transações bancárias 
+-- (depósitos, saques, transferências, pagamentos) quanto as compras e vendas de investimentos, 
+-- fornecendo uma visão completa das atividades financeiras do cliente. (Utilizar UNION, considerar 
+-- as respostas dos exercícios 12 e 13)
+
+SELECT transacoes.tipo_transacao, transacoes.valor, transacoes.tipo_transacao AS DescriçãoTransação, transacoes.data_transacao
+FROM cliente
+INNER JOIN conta ON conta.id_cliente = cliente.id_cliente
+INNER JOIN transacoes ON transacoes.id_conta = conta.id_conta
+WHERE cliente.id_cliente = 1
+
+UNION 
+
+SELECT investimento.tipo_operacao AS 'Nome de Investimento', produto.retorno, investimento.tipo_operacao AS 'Descrição', investimento.data_hora AS 'Data Operação'
+FROM cliente 
+INNER JOIN conta ON conta.id_cliente = cliente.id_cliente
+INNER JOIN investimento ON investimento.id_conta = conta.id_conta
+INNER JOIN produto ON produto.id_produto = investimento.id_produto
+WHERE cliente.id_cliente = 1;
+
+-- 15. Listar os clientes sem cadastro de conta (nenhuma conta – ativa ou inativa). (Utilizar LEFT ou RIGHT JOIN, ou subconsulta).
+-- Campos: ClienteID, Nome.
+INSERT INTO cliente (nome, sobrenome, cpf, email, telefone, data_registro) VALUES 
+('Atlas', 'Corrigan', '45678901234', 'atlas.corrigan@example.com', '2223334445', '2024-05-29');
+
+SELECT cliente.id_cliente, cliente.nome 
+FROM cliente 
+LEFT JOIN conta on conta.id_cliente = cliente.id_cliente
+WHERE conta.id_cliente IS NULL;
+
+-- 16.Identificar clientes que nunca realizaram uma transação. 
+-- (Utilizar LEFT ou RIGHT JOIN, ou subconsulta).Campos: ClienteID, Nome.
+SELECT cliente.id_cliente, cliente.nome 
+FROM cliente 
+LEFT JOIN conta ON conta.id_cliente = cliente.id_cliente
+LEFT JOIN transacoes ON transacoes.id_conta = conta.id_conta
+WHERE transacoes.id_conta IS NULL;

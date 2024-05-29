@@ -1,0 +1,59 @@
+-- Inserindo dados na tabela Cliente 
+INSERT INTO cliente (nome, sobrenome, cpf, email, telefone, data_registro) 
+VALUES 
+	('Hannah', 'Wells', '12345678901', 'hannah.wells@example.com', '1234567890', '2024-05-29'),
+	('Garret', 'Graham', '23456789012', 'garret.graham@example.com', '0987654321', '2024-05-29'),
+	('Naruto', 'Uzumaki', '34567890123', 'naruto.uzumaki@example.com', '1112223334', '2024-05-29');
+
+-- Inserindo dados na tabela endereço
+INSERT INTO endereco (rua, bairro, cidade, estado, cep, numero, complemento, id_cliente) 
+VALUES 
+	('Rua das Flores', 'Centro', 'Cidade A', 'Estado X', '12345000', 101, 'Apto 12', 1),
+	('Avenida Central', 'Bairro B', 'Cidade B', 'Estado Y', '23456000', 202, 'Casa', 2),
+	('Rua Ninja', 'Bairro Konoha', 'Vila Konoha', 'Estado Ninja', '34567000', 303, 'Apto 3', 3);
+
+
+-- Inserindo dados na tabela contas 
+INSERT INTO conta (id_cliente, tipo_conta, status_ativo) 
+VALUES 
+	(1, 'corrente', TRUE),
+	(2, 'poupança', TRUE),
+	(3, 'corrente', TRUE);
+
+-- Inserindo dados na tabela cartão
+INSERT INTO cartao (id_conta, nome, tipo_cartao, numero_cartao, cod_seguranca, limite_credito, data_emissao, data_validade, status)
+VALUES 
+	(1, 'Hannah Wells', 'debito', '1111222233334444', '123', NULL, '2024-01-01', '2026-01-01', 'desbloqueado'),
+	(2, 'Garret Graham', 'credito', '5555666677778888', '456', 5000.00, '2024-02-01', '2026-02-01', 'desbloqueado'),
+	(3, 'Naruto Uzumaki', 'debito_credito', '9999000011112222', '789', 10000.00, '2024-03-01', '2026-03-01', 'desbloqueado');
+
+
+-- Inserindo dados na tabela transações 
+INSERT INTO transacoes (id_conta, tipo_transacao, data_transacao, hora) 
+VALUES 
+	(1, 'depósito', '2024-05-29', '10:00:00'),
+	(2, 'saque', '2024-05-29', '11:00:00'),
+	(3, 'transferência', '2024-05-29', '12:00:00');
+
+
+-- Inserindo dados na tabela produto 
+INSERT INTO produto (nome_produto, risco, tipo_produto, retorno) 
+VALUES 
+	('Ação XYZ', 'alto', 'ação', 15.50),
+	('Tesouro Direto ABC', 'baixo', 'tesouro direto', 5.00),
+	('Ação ABC', 'médio', 'ação', 10.25);
+    
+
+-- Inserindo dados na tabela Investimento 
+INSERT INTO investimento (id_produto, id_conta, tipo_operacao, quantidade, data_hora) 
+VALUES 
+	(1, 1, 'compra', 100, '2024-05-29 10:30:00'),
+	(2, 2, 'compra', 200, '2024-05-29 11:30:00'),
+	(1, 3, 'venda', 150, '2024-05-29 12:30:00');
+    
+-- Inserindo dados na tabela Log Acesso 
+INSERT INTO log_acesso (id_conta, data_acesso, hora_acesso) 
+VALUES 
+	(1, '2024-05-29', '09:00:00'),
+	(2, '2024-05-29', '10:00:00'),
+	(3, '2024-05-29', '11:00:00');
